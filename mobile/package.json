@@ -1,12 +1,14 @@
 {
   "name": "mobile",
   "version": "0.0.1",
+  "description": "Mobile Host",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
-    "start": "react-native start",
+    "start": "react-native webpack-start",
+    "start:branded": "react-native webpack-start --webpackConfig webpack.config.branded.mjs",
     "test": "jest"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
     "@types/react-test-renderer": "^18.0.0",
     "babel-jest": "^29.6.3",
     "babel-loader": "^9.2.1",
+    "dotenv-webpack": "^8.1.0",
     "eslint": "^8.19.0",
     "jest": "^29.6.3",
     "prettier": "2.8.8",
