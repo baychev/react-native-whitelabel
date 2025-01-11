@@ -4,7 +4,6 @@ import path from 'node:path';
 import * as Repack from '@callstack/repack';
 import TerserPlugin from 'terser-webpack-plugin';
 import webpack from 'webpack';
-import Dotenv from 'dotenv-webpack';
 
 const dirname = Repack.getDirname(import.meta.url);
 const { resolve } = createRequire(import.meta.url);
@@ -27,6 +26,7 @@ const { resolve } = createRequire(import.meta.url);
 export default (env) => {
   const {
     mode = 'development',
+    brand = process.env.APP_BRAND,
     context = dirname,
     entry = './index.js',
     platform = process.env.PLATFORM,
@@ -216,6 +216,20 @@ export default (env) => {
       ],
     },
     plugins: [
+      new webpack.NormalModuleReplacementPlugin(
+        /\.\/*/,
+        function (resource) {
+          if (brand?.length > 0 && !resource.request.endsWith(`.${brand}`)) {
+            var branded_file = resource.request + `.${brand}`;
+            ['ts', 'tsx'].forEach(ext => {
+              if (fs.existsSync(path.resolve(resource.context, `${branded_file}.${ext}`))) {
+                console.warn('FILE REPLACEMENT:', resource.request, branded_file)
+                resource.request = branded_file;
+              }
+            })
+          }
+        }
+      ),
       /**
        * Configure other required and additional plugins to make the bundle
        * work in React Native and provide good development experience with
