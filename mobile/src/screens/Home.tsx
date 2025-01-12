@@ -4,6 +4,7 @@ import ComponentTwo from "../Two/ComponentTwo"
 import ComponentThree from "../Three/ComponentThree"
 import stylesheet from "./Home.StyleSheet"
 import ComponentFour from "../Four/ComponentFour"
+import ComponentFive from "../Five/ComponentFive"
 
 function Home() {
     return(<View>
@@ -12,6 +13,7 @@ function Home() {
         <ComponentTwo />
         <ComponentThree />
         <ComponentFour />
+        <ComponentFive />
     </View>)
 }
 

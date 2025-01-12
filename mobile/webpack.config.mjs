@@ -219,7 +219,23 @@ export default (env) => {
       new webpack.NormalModuleReplacementPlugin(
         /\.\/*/,
         function (resource) {
-          if (brand?.length > 0 && !resource.request.endsWith(`.${brand}`)) {
+          if (!(brand?.length > 0)) return 
+          
+          // resources with extension
+          let isReplaceable =  RegExp(/\.(ts|tsx|png|jpg|svg)$/).test(resource.request)
+          const ext = (resource.request.match(/\.([^.]*?)(?=\?|#|$)/) || [])[1] 
+
+          
+          if (isReplaceable) {
+            var branded_file = resource.request.replace(`.${ext}`, `.${brand}.${ext}`);
+            if (fs.existsSync(path.resolve(resource.context, `${branded_file}`))) {
+              console.warn('FILE REPLACEMENT:', resource.request, branded_file)
+              resource.request = branded_file;
+            }
+          }
+
+          // resources without extension
+          if (!resource.request.endsWith(`.${brand}`)) {
             var branded_file = resource.request + `.${brand}`;
             ['ts', 'tsx'].forEach(ext => {
               if (fs.existsSync(path.resolve(resource.context, `${branded_file}.${ext}`))) {
